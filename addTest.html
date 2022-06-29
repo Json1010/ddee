@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+<script>
+    var  level  = prompt('请设置金字塔的层数');
+    //获取输入的是纯数字，其余转换为NaN
+    level = parseInt(level) && Number(level);
+    //判断用户输入的数据是否合法
+    if(isNaN(level)){
+        alert('金字塔的层数必须是数字');
+    }
+    //循环遍历金字塔的层数
+    for(var i = 1 ; i <= level ;i++){
+        //输出星星前的空格
+        var  blank = level - i;
+        for(var  k = 0; k  < blank ;k ++){
+            document.write('&nbsp;');
+        }
+        //打印星星
+        var start = i * 2 - 1;
+
+        for(var j = 0 ;j < start;j++){
+            document.write('*');
+        }
+        //换行
+        document.write('</br>');
+    }
+</script>

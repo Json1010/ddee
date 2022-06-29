@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="./layui/css/layui.css">
+  <script src="js/jquery-1.10.2.min.js"></script>
+</head>
+<style>
+  .layui-input, .layui-textarea{
+    width:80%;
+  }
+  .layui-form-label{
+    width:150px;
+  }
+  .layui-input-block{
+    text-align: center;
+    margin-left: 0;
+  }
+  .layui-input-block{
+      margin-bottom: 20px;
+  }
+</style>
+<body>
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <!-- 头部区域（可配合layui 已有的水平导航） -->
+    <h1 style="line-height: 60px;
+                color: white;
+                text-align: center;">停车场管理平台--数据录入</h1>
+  </div>
+  
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+          <!-- <a class="" href="javascript:;">menu group 1</a> -->
+          <dl class="layui-nav-child">
+            <dd class="layui-this"><a href="javascript:;">临停车数据录入</a></dd>
+          </dl>
+          <dl class="layui-nav-child">
+            <dd><a href="newMonthCar.html">月租车数据录入</a></dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <form class="layui-form" action="" style="margin-top:10%" id="addGoodsForm">
+      <div class="layui-form-item">
+        <div class="layui-inline"> 
+          <label class="layui-form-label">请选择当前日期</label>
+          <div class="layui-input-inline">
+           <input type="text" name="createTime_decode" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+          </div>
+         </div>
+        <div class="layui-input-block">
+          <label class="layui-form-label">当日临停车收入</label>
+          <input type="text" name="parking_fee" required  lay-verify="required" placeholder="请输入金额" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-input-block">
+            <label class="layui-form-label">当日临停车数量</label>
+            <input type="text" name="rent_num" required  lay-verify="required" placeholder="请输入金额" autocomplete="off" class="layui-input">
+          </div>
+      </div>
+      
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit lay-filter="formWeek">立即提交</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+
+
+  </div>
+  
+  <div class="layui-footer" style="text-align:center;">
+    <!-- 底部固定区域 -->
+    高科中环
+  </div>
+</div>
+<script src="./layui/layui.js"></script>
+<script>
+
+        layui.use(['form','laydate'], function(){
+          var form = layui.form
+          ,laydate = layui.laydate;
+             //日期
+          laydate.render({
+            elem: '#date'
+          }); 
+          form.on('submit(formWeek)', function(data){
+            console.log(data.field);
+           
+            $.ajax({
+                type: "POST",//方法类型
+                dataType:'json',
+                url:'https://www.gygkzhpark.com/home/api/order',
+                // data:{
+                //   method:'add_temp_income',
+                //   jsondata: JSON.stringify({
+                //       createTime_decode:data.field.createTime_decode,
+                //       parking_fee:data.field.parking_fee,
+                //       rent_num:data.field.rent_num,
+                //       rent_fee:data.field.rent_fee,
+                //       comid:123
+                //     })
+                //   },
+                data:{
+                  method:'add_temp_income',
+                  jsondata: JSON.stringify({
+                    createTime_decode:data.field.createTime_decode,
+                    parking_fee:data.field.parking_fee,
+                    rent_num:data.field.rent_num,
+                    comid:'123'}
+                    )
+                  },
+                success: function (d) {
+                  layer.msg("数据已上传");
+                  $("#addGoodsForm")[0].reset();
+                        layui.form.render();
+
+                 
+                },
+                error : function(e) {
+                    console.log(e);
+                }
+              });
+            return false;
+          });
+
+          
+});
+</script>
+</body>
+</html>

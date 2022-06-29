@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="layui/css/layui.mobile.css">
+    <link rel="stylesheet" href="layui/myicon/iconfont.css">
+    <link rel="stylesheet" href="mui/css/mui.css">
+    <link rel="stylesheet" href="css/calendar.css">
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="mui/js/mui.min.js"></script>
+    <script src="echarts/echarts.min.js"></script>
+    <script src="layui/layui.all.js"></script>
+    <script src="layui/myicon/iconfont.js"></script>
+    <script src="js/calendar.js"></script>
+    <title>Document</title>
+</head>
+<style>
+  .layui-tab-card{
+    background-color: #fff;
+  }
+  .layui-layout-admin .layui-footer {
+    position: fixed;
+    left: 200px;
+    left: 0;
+    bottom: 0;
+    height: 44px;
+    line-height: 44px;
+    padding: 0;
+    background-color: #eee;
+    width: 100%;
+    text-align: center;
+}
+.layui-body {
+    position: absolute;
+    /* left: 200px; */
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 998;
+    width: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+.layui-layout-admin .layui-body {
+    position: fixed;
+    top: 40px;
+    bottom: 44px;
+}
+.pId{
+  margin-top:10px;
+  font-size: 12px;
+  color:grey;
+}
+.mui-table-view-cell > a:not(.mui-btn){
+  font-size: 14px;
+}
+#demo {
+  background-color: #fff;
+	width: 400px;
+	/* margin: 150px auto; */
+}
+p {
+	margin: 0;
+}
+#dt {
+	margin: 30px auto;
+	height: 28px;
+	width: 200px;
+	padding: 0 6px;
+	border: 1px solid #ccc;
+	outline: none;
+}
+.money{
+	/* -webkit-text-size-adjust:none; */
+	color: orange;
+    position: absolute;
+    top: 39%;
+    font-size: 12px;
+    left: 20%;
+}
+.mui-table-view-cell1{
+    float: left;
+    padding: 2px 13px;
+}
+.mui-table-view:before{
+  position:fixed;
+}
+.mui-table-view:after{
+  position: fixed;
+}
+.layui-tab-content{
+  padding:0;
+}
+</style>
+<body class="layui-layout-body">
+  <div class="layui-layout layui-layout-admin">
+    <div class="layui-header" style="height:40px;text-align: center;color: #eee;">
+      <!-- <div class="layui-logo1" style="line-height: 40px;"><img src="images/logo.png" style="width: 80%;"></d iv> -->
+      <div class="layui-logo1" style="line-height: 40px;">停车场管理平台</div>
+      <!-- 头部区域（可配合layui已有的水平导航） -->
+  </div>
+  
+    <div class="layui-body">
+      <div id="toEchart" style="display: none;"onclick="goEchart();"><span style="color:#020202;">切换至数据统计<img src="img/change.png" alt="" style="width:6%;"></span></div>
+      <div class="layui-tab layui-tab-card" style="width:100%;height:400px;">
+        <ul class="layui-tab-title">
+          <li class="layui-this">按车场统计</li>
+          <li>按日期统计</li>
+          <li>月租车统计</li>
+          <!-- <li>新停车场</li> -->
+        </ul>
+        <div class="layui-tab-content" style="height: 100px;">
+          <div class="layui-tab-item layui-show">  
+            <div id="mainChart" style="width: 400px;height: 300px;margin: 0 auto;"></div>
+            <div style="font-size:14px;color: gray;">上月收入合计:<span id="lastMonth">数据加载中...</span></div>
+            <div style="font-size:14px;color: gray;">总收入合计(2022-03至今):<span id="allSum">数据加载中...</span></div>
+          </div>
+
+          <div class="layui-tab-item">
+            <div id="demo">
+              <div id="ca"></div>
+              <div id="dd"></div>
+            </div>
+           
+          </div>
+
+        <div class="layui-tab-item">
+          <div class="mui-card-content" style="margin-top:25%;">
+              <div class="mui-row">
+                  <ul class="mui-table-view">
+                      <li class="mui-table-view-cell1 mui-col-sm-6 mui-col-xs-6" style="text-align: center;"> 
+                          <span style="font-size: 23px;color:#007aff ;" id="allCar">0</span>
+                          <span style="font-size:8px;color:#7F8C8D" >辆</span>
+                          <div style="font-size: 15px;background-color: #007aff;border-radius: 7px;color: white;"><span>月租车总数量</span></div>
+                      </li>
+                      <li class="mui-table-view-cell1 mui-col-sm-6 mui-col-xs-6" style="text-align: center;">
+                          <span style="font-size: 23px;color:green" id="monthCost">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 15px;background-color: green;border-radius: 7px;color: white;"><span>月租车总收入</span></div>
+                      </li>
+                  </ul>
+              </div>
+              <div class="mui-row" style="margin-top: 30px;">
+                <ul class="mui-table-view">
+                    <li class="mui-table-view-cell1 mui-col-sm-6 mui-col-xs-6" style="text-align: center;"> 
+                        <span style="font-size: 23px;color:orange ;" id="weekCar">0</span>
+                        <span style="font-size:8px;color:#7F8C8D" >辆</span>
+                        <div style="font-size: 15px;background-color: orange;border-radius: 7px;color: white;"><span>本周新增续费月租车</span></div>
+                    </li>
+                    <li class="mui-table-view-cell1 mui-col-sm-6 mui-col-xs-6" style="text-align: center;">
+                        <span style="font-size: 23px;color:rgb(110, 29, 121)" id="weekCost">0</span>
+                        <span style="font-size:8px;color:#7F8C8D">元</span>
+                        <div style="font-size: 15px;background-color: rgb(110, 29, 121);border-radius: 7px;color: white;"><span>本周月租车收入</span></div>
+                    </li>
+                </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="layui-tab-item">
+          <div class="mui-card">
+          
+            <div class="mui-card-header">
+                <div style="font-size: 14px;">收益分析</div>
+                <div style="font-size:12px;color:gray;float: right;" id="time"></div>
+            </div>
+          
+            <div class="mui-card-content">
+                
+                <div class="oth mui-row" id="money">         
+                    <ul class="mui-table-view" style="display: flex;">
+                      <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;"> 
+                          <span style="font-size: 21px;color:#2980B9 ;" id="moncost">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">当月累计收入</span>
+                          </div>
+                      </li>
+                      <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;">
+                          <span style="font-size: 21px;color:#2980B9" id="weekcost">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">当周累计收入</span>
+                          </div>
+                      </li>
+                      <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;">
+                        <span style="font-size: 21px;color:#2980B9;" id="daycost">0</span>
+                        <span style="font-size:8px;color:#7F8C8D">元</span>
+                        <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                          <span style="font-size: 15px;">当日累计收入</span>
+                        </div>
+                      </li>
+                    </ul>
+                  
+                   
+                </div>
+            </div>
+          </div>
+
+          <div class="mui-card">
+          
+            <div class="mui-card-header">
+                <div style="font-size: 14px;">月租车数据</div>
+                <div style="font-size:12px;color:gray;float: right;" id="time"></div>
+            </div>
+          
+            <div class="mui-card-content">
+               
+                <div class="oth mui-row" id="money">         
+                    <ul class="mui-table-view" style="display: flex;">
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;"> 
+                          <span style="font-size: 21px;color:#2980B9 ;" id="moncost">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">辆</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">月租车总数量</span>
+                          </div>
+                      </li>
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;">
+                          <span style="font-size: 21px;color:#2980B9" id="weekcost">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">月租车总收入</span>
+                          </div>
+                      </li>
+                    </ul>
+                    <ul class="mui-table-view" style="display: flex;">
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;"> 
+                          <span style="font-size: 21px;color:#2980B9 ;" id="moncost">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">辆</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">本周新增月租车</span>
+                          </div>
+                      </li>
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;">
+                          <span style="font-size: 21px;color:#2980B9" id="weekcost">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">本周月租车收入</span>
+                          </div>
+                      </li>
+                    </ul>     
+                </div>
+            </div>
+        </div>
+
+        </div> -->
+
+
+      </div>
+    </div>
+     
+    
+      <!-- 内容主体区域 -->
+      <div style="padding: 15px;">
+        <ul class="mui-table-view" id="allList">
+          <li class="mui-table-view-cell" onclick="goDetail()">
+              <a class="mui-navigate-right">留创园&nbsp;<span style="font-size: 12px;color: gray;"> 当日流水:158元</span><div class="pId">车厂编号：12345</div></a>
+          </li>  
+        </ul>
+      </div>
+
+       
+      
+
+    </div>
+    
+    <div class="layui-footer">
+      <!-- 底部固定区域 -->
+      © 高科中环
+    </div>
+  </div>
+ 
+  <script>
+  //JavaScript代码区域
+  layui.use('element', function(){
+    var element = layui.element;
+    
+  });
+  </script>
+  </body>
+</html>
+<script>
+     
+  var myChart = echarts.init(document.getElementById('mainChart'));
+  var names = [];
+  var mydata = [];
+  var html = "";
+  var allMoney="";
+  $.ajax({
+        url:'https://www.gygkzhpark.com/home/api/order',
+        method:'post',
+        dataType:'json',
+          data:{method:'getSum',
+              jsondata:''
+        },
+        success: function(d) {
+         var mco =  $("#monthCost").text();
+         console.log("monthCost:"+mco);
+        console.log(d);
+         var sum = d.reduce(function(a,b){
+           return a + b.allMoney
+         },0);
+        //  $("#allSum").html(sum+"元");
+        allMoney = sum;
+        //  console.log(allMoney);
+          for (var i=0;i<d.length;i++){
+                names.push(d[i].name);
+                mydata[i] = {value:d[i].allMoney, name: d[i].park_name};
+          }
+          console.log(mydata);
+          var option = {
+                        // title: {
+                        //     text: '各车场流水统计(仅统计有流水车场)',
+                        //     left: 'center'
+                        // },
+                        tooltip: {
+                            formatter: '{b} : {c}元 ({d}%)'
+                        },
+                         legend: {
+                             orient: 'vertical',
+                             left: 'left',
+                             data: names
+                         },
+                        series: [
+                            {
+                                type: 'pie',
+                                radius: '50%',
+                                center: ['50%', '60%'],
+                                data: mydata,
+                                itemStyle:{ 
+								        normal:{ 
+								           label:{ 
+								              show: true, 
+								              formatter: '{b}  \n  {c}元 \n({d}%)' 
+								              }, 
+								              labelLine :{show:true} 
+								              } 
+								         } 
+
+                            }
+                            
+                        ]
+                    }; 
+               myChart.setOption(option,true);
+           },
+          })
+          $.ajax({
+            url:'https://www.gygkzhpark.com/home/api/order',
+            method:'post',
+            dataType:'json',
+            data:{method:'getArea',jsondata:''},
+            success:function(d){
+                 console.log(d);
+                 d.forEach((a, i) => {
+                  // console.log(a);
+                   html +=  "<li class='mui-table-view-cell' onclick='goDetail("+a.comid+")'>"+
+                            " <a class='mui-navigate-right'>"+a.name+"<div class='pId'>车场编号："+a.comid+"</div></a></li>"    
+                 })
+              $("#allList").html(html);
+            }
+          })
+
+function goDetail(comid){
+      if(comid == '123'){
+        window.location.href="newDel.html?comid="+comid;
+      }else{  
+        window.location.href="detail.html?comid="+comid;
+      }
+ 
+    }
+          $.ajax({
+            url:'https://www.gygkzhpark.com/home/api/order',
+            method:'post',
+            dataType:'json',
+            data:{method:'getDatesum',jsondata:JSON.stringify({comid:"all"})},
+            success:function(d){
+                console.log(d);
+                $('#ca').calendar({
+                  width: 380,
+                  height: 300,
+                  data: d
+                });   
+            }
+          })
+
+          $.ajax({
+            type: "POST",//方法类型
+            dataType:'json',
+            url:'https://www.gygkzhpark.com/home/api/order',
+            data:{method:'getAllMonthsCar',jsondata:''},
+            success: function (d) {
+              console.log(d);
+              console.log(allMoney);
+              var allmm = allMoney+d.money;
+              $("#allSum").html(allmm.toFixed(2)+"元");
+              $("#allCar").html(d.Count);
+              $("#monthCost").html(d.money);
+              $("#weekCar").html(d.weekTotal);
+              $("#weekCost").html(d.weekmoney);
+            }
+          });
+          $.ajax({
+            url:'https://www.gygkzhpark.com/home/api/order',
+            method:'post',
+            dataType:'json',
+            data:{method:'getAllMonthSum',jsondata:''},
+            success:function(d){
+                // console.log(d.children);
+                console.log(d.all);
+                $("#lastMonth").html(d.all+"元");
+            }
+          })
+          function goEchart(){
+            window.location.href='echart.html'
+          }
+var a;
+// a = 'abc';
+if(a=='abc'){
+$("#toEchart").css('display','block');
+}
+</script>
+

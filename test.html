@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="layui/css/layui.mobile.css">
+    <link rel="stylesheet" href="layui/myicon/iconfont.css">
+    <link rel="stylesheet" href="mui/css/mui.css">
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="mui/js/mui.min.js"></script>
+    <script src="echarts/echarts.min.js"></script>
+    <script src="layui/layui.all.js"></script>
+    <script src="layui/myicon/iconfont.js"></script>
+    <title>Document</title>
+</head>
+<style>
+    table tbody {
+        display: block;
+        height: 400px;
+        overflow-y: scroll;
+    }
+    table thead,
+    tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+  .layui-layout-admin .layui-footer {
+    position: fixed;
+    left: 200px;
+    left: 0;
+    bottom: 0;
+    height: 44px;
+    line-height: 44px;
+    padding: 0;
+    background-color: #eee;
+    width: 100%;
+    text-align: center;
+}
+.layui-body {
+    position: absolute;
+    /* left: 200px; */
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 998;
+    width: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+.layui-layout-admin .layui-body {
+    position: fixed;
+    top: 40px;
+    bottom: 44px;
+}
+.pId{
+  margin-top:10px;
+  font-size: 12px;
+  color:grey;
+}
+.mui-table-view-cell > a:not(.mui-btn){
+  font-size: 14px;
+}
+.mui-card-header:after, .mui-card-footer:before{
+    background-color: #fff;
+}
+/* .oth{
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: 60%;
+    
+} */
+.mui-table-view-cell{
+    float: left;
+    padding: 2px 13px;
+}
+.mui-table-view-cell:after{
+    background-color: #fff;
+}
+.mui-table-view-cell1{
+    float: left;
+    padding: 9px 44px;
+}
+.layui-tab-title li{
+  display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    vertical-align: middle;
+    font-size: 14px;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    /* position: absolute; */
+    line-height: 40px;
+    min-width: 65px;
+    /* padding: 0em 0em; */
+    text-align: center;
+    cursor: pointer;
+    width: 50%;
+}
+.layui-tab-title .layui-this{
+  color:#fff;
+  background-color: #007aff;
+}
+.layui-table td, .layui-table th{
+  position: relative;
+    padding: 9px 0px;
+    min-height: 20px;
+    line-height: 20px;
+    font-size: 10px;
+    text-align: center;
+}
+</style>
+<body class="layui-layout-body">
+  <button style="margin: 0 auto;width: 20%;" onclick="shows12345()">123</button>
+  </body>
+
+
+</html>
+<script>
+
+function shows12345(){
+
+// $.ajax({
+//   url:'https://www.gygkzhpark.com/home/api/order',
+//   method:'post',
+//   dataType:'json',
+//    data:{method:'getData_dayPool',jsondata:'{date:"2022-03-23"}'},
+//   success:function(d){
+//       console.log(d);
+//   }
+// })
+
+$.ajax({
+            url:'https://www.gygkzhpark.com/home/api/order',
+            method:'post',
+            dataType:'json',
+             data:{method:'getCWdata',jsondata:'{dates:"2022-05-18"}'},
+            success:function(d){
+                console.log(d);
+            }
+          })
+
+}
+
+</script>

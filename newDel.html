@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="layui/css/layui.mobile.css">
+    <link rel="stylesheet" href="layui/myicon/iconfont.css">
+    <link rel="stylesheet" href="mui/css/mui.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="mui/js/mui.min.js"></script>
+    <script src="echarts/echarts.min.js"></script>
+    <script src="layui/layui.all.js"></script>
+    <script src="layui/myicon/iconfont.js"></script>
+    <title>Document</title>
+</head>
+<style>
+    table tbody {
+        display: block;
+        height: 400px;
+        overflow-y: scroll;
+    }
+    table thead,
+    tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+  .layui-layout-admin .layui-footer {
+    position: fixed;
+    left: 200px;
+    left: 0;
+    bottom: 0;
+    height: 44px;
+    line-height: 44px;
+    padding: 0;
+    background-color: #eee;
+    width: 100%;
+    text-align: center;
+}
+.layui-body {
+    position: absolute;
+    /* left: 200px; */
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 998;
+    width: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+.layui-layout-admin .layui-body {
+    position: fixed;
+    top: 40px;
+    bottom: 44px;
+}
+.pId{
+  margin-top:10px;
+  font-size: 12px;
+  color:grey;
+}
+.mui-table-view-cell > a:not(.mui-btn){
+  font-size: 14px;
+}
+.mui-card-header:after, .mui-card-footer:before{
+    background-color: #fff;
+}
+/* .oth{
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: 60%;
+    
+} */
+.mui-table-view-cell{
+    float: left;
+    padding: 2px 13px;
+}
+.mui-table-view-cell:after{
+    background-color: #fff;
+}
+.mui-table-view-cell1{
+    float: left;
+    padding: 9px 44px;
+}
+.layui-tab-title li{
+  display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    vertical-align: middle;
+    font-size: 14px;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    /* position: absolute; */
+    line-height: 40px;
+    min-width: 65px;
+    /* padding: 0em 0em; */
+    text-align: center;
+    cursor: pointer;
+    width: 50%;
+}
+.layui-tab-title .layui-this{
+  color:#fff;
+  background-color: #007aff;
+}
+.layui-table td, .layui-table th{
+  position: relative;
+    padding: 9px 0px;
+    min-height: 20px;
+    line-height: 20px;
+    font-size: 10px;
+    text-align: center;
+}
+.search {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid #007aff;
+  border-right: none;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: #007aff;
+}
+
+.searchButton {
+  width: 50px;
+  height:40px;
+  border: 1px solid #007aff;
+  background: #007aff;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.search {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+</style>
+<body class="layui-layout-body">
+  
+  <div class="layui-layout layui-layout-admin">
+    <div class="layui-header" style="height:40px;text-align: center;color: #eee;">
+      <!-- <div class="layui-logo1" style="line-height: 40px;"><img src="images/logo.png" style="width: 80%;"></div> -->
+      <div class="layui-logo1" style="line-height: 40px;">停车场管理平台</div>
+      <!-- 头部区域（可配合layui已有的水平导航） -->
+  </div>
+    <div class="layui-body">
+        <div style="margin: 10px;" id="tlt">
+          <div>停车场名称<a href="index.html" style="float: right;">切换</a></div> 
+        </div>
+        <div class="mui-card" style="height: 90%;">
+            <!--页眉，放置标题-->
+            <div class="mui-card-header">
+                <div style="font-size: 14px;">收益分析</div>
+                <div style="font-size:12px;color:gray;float: right;" id="time"></div>
+            </div>
+            <!--内容区-->
+            <div class="mui-card-content">
+                <!-- <div id="mainchart" style="width: 40vw;height:10vh;"></div> -->
+                <div class="oth mui-row" id="money">
+                  <div>
+                    <ul class="mui-table-view"> 
+                      <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;"> 
+                          <span style="font-size: 21px;color:#2980B9 ;" id="year_total">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">当年累计收入</span>
+                          </div>
+                      </li>
+                      <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;">
+                          <span style="font-size: 21px;color:#D35400" id="month_total">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #D35400;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">当月累计收入</span>
+                          </div>
+                      </li>
+                      <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;">
+                        <span style="font-size: 21px;color:#9B59B6;" id="day_total">0</span>
+                        <span style="font-size:8px;color:#7F8C8D">元</span>
+                        <div style="font-size: 8px;color: gray;background-color: #9B59B6;border-radius: 7px;color: white;">
+                          <span style="font-size: 15px;">当日累计收入</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                   
+                </div>
+            </div>
+
+            <!-- 临停车数据 -->
+            <div class="mui-card-content">
+              <div class="mui-card-header">
+                <div style="font-size: 14px;">临停车数据</div>
+            </div>
+                <div class="mui-row">
+                    <ul class="mui-table-view">
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;"> 
+                        <span style="font-size: 21px;color:#2980B9 ;" id="day_num">0</span>
+                        <span style="font-size:8px;color:#7F8C8D">辆</span>
+                        <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                          <span style="font-size: 15px;">当日临停车数量</span>
+                        </div>
+                    </li>
+                    <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;">
+                        <span style="font-size: 21px;color:#2980B9" id="day_fee">0</span>
+                        <span style="font-size:8px;color:#7F8C8D">元</span>
+                        <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                          <span style="font-size: 15px;">当日临停车收入</span>
+                        </div>
+                    </li>
+                    </ul>
+                    <ul class="mui-table-view">
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;"> 
+                          <span style="font-size: 21px;color:#2980B9 ;" id="month_fee">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">当月累计收入</span>
+                          </div>
+                      </li>
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;">
+                          <span style="font-size: 21px;color:#2980B9" id="year_fee">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">当年累计收入</span>
+                          </div>
+                      </li>
+                    </ul>     
+                </div>
+            </div>
+
+            <!-- 月租车数据 -->
+            <div class="mui-card-content">
+              <div class="mui-card-header">
+                <div style="font-size: 14px;">月租车数据</div>
+            </div>
+                <div class="mui-row">
+                    <ul class="mui-table-view">
+                      <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;"> 
+                        <span style="font-size: 21px;color:#2980B9 ;" id="rent_num">0</span>
+                        <span style="font-size:8px;color:#7F8C8D">辆</span>
+                        <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                          <span style="font-size: 15px;">当月<br>月租车数量</span>
+                        </div>
+                    </li>
+                    <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;">
+                        <span style="font-size: 21px;color:#2980B9" id="rent_fee">0</span>
+                        <span style="font-size:8px;color:#7F8C8D">元</span>
+                        <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                          <span style="font-size: 15px;">当月<br>月租车收入</span>
+                        </div>
+                    </li>
+                    <li class="mui-table-view-cell mui-col-sm-4 mui-col-xs-4" style="text-align: center;">
+                      <span style="font-size: 21px;color:#2980B9" id="rent_year_fee">0</span>
+                      <span style="font-size:8px;color:#7F8C8D">元</span>
+                      <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                        <span style="font-size: 15px;">当年<br>月租车收入</span>
+                      </div>
+                  </li>
+                    </ul>
+                    <!-- <ul class="mui-table-view">
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;"> 
+                          <span style="font-size: 21px;color:#2980B9 ;" id="car_week_rentNum">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">辆</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">当年累计月租车数量</span>
+                          </div>
+                      </li>
+                      <li class="mui-table-view-cell mui-col-sm-6 mui-col-xs-6" style="text-align: center;">
+                          <span style="font-size: 21px;color:#2980B9" id="car_week_rentFee">0</span>
+                          <span style="font-size:8px;color:#7F8C8D">元</span>
+                          <div style="font-size: 8px;color: gray;background-color: #2980B9;border-radius: 7px;color: white;">
+                            <span style="font-size: 15px;">当年累计月租车收入</span>
+                          </div>
+                      </li>
+                    </ul>      -->
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="layui-footer">
+      <!-- 底部固定区域 -->
+      © 高科中环
+    </div>
+  </div>
+  <script>
+  //JavaScript代码区域
+  layui.use('element', function(){
+    var element = layui.element;
+    
+  });
+  </script>
+  </body>
+</html>
+<script>
+  $(function() {
+    var myDate = new Date;
+    var year = myDate.getFullYear(); //获取当前年
+    var mon = myDate.getMonth() + 1; //获取当前月
+    var date = myDate.getDate(); //获取当前日
+    // var h = myDate.getHours();//获取当前小时数(0-23)
+    // var m = myDate.getMinutes();//获取当前分钟数(0-59)
+    // var s = myDate.getSeconds();//获取当前秒
+    var week = myDate.getDay();
+    var weeks = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    //console.log(year, mon, date, weeks[week]);
+    $("#time").html(year + "年" + mon + "月" + date + "日 " + weeks[week]);
+
+})
+  function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) { return pair[1]; }
+        }
+        return (false);
+    }
+    
+    var tlt;
+    var comid = getQueryVariable("comid");
+    if (comid == 123) {
+        tlt = "数字内容产业园";
+    }
+    $("#tlt").html("<div>"+tlt+"<a href='index.html' style='float: right;'>切换</a></div>");
+
+    $.ajax({
+          type: "POST",//方法类型
+          dataType:'json',
+          url:'https://www.gygkzhpark.com/home/api/order',
+          data:{method:'getTempParking',jsondata: JSON.stringify({comid:comid})},
+          success: function (d) {
+            console.log(d);
+            //汇总
+            $("#year_total").html(d.totalFlow.year_total);
+            $("#month_total").html(d.totalFlow.month_total);
+            $("#day_total").html(d.totalFlow.day_total);
+            //月租
+            $("#rent_fee").html(d.rentFlow.rent_fee);
+            $("#rent_num").html(d.rentFlow.rent_num);
+            $("#rent_year_fee").html(d.rentFlow.year_fee);
+           //临停
+           $("#year_fee").html(d.carFlow.year_fee);
+           $("#month_fee").html(d.carFlow.month_fee);
+           $("#day_num").html(d.carFlow.day_num);
+           $("#day_fee").html(d.carFlow.day_fee);
+          },
+          error : function() {
+              console.log("异常！");
+          }
+        });
+
+</script>
